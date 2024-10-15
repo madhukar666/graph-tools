@@ -32,13 +32,8 @@ function dijkstra(edges, n, src, dest) {
         path.push(x);
         x = predecessor[x].parent;
     }
-    // console.log(path);
     path.reverse();
-    const set = new Set();
-    path.forEach((p) => {
-        set.add(p);
-    })
-    return { set: set, cost: distance[dest] };
+    return { path: path, cost: distance[dest] };
 }
 
 
@@ -76,11 +71,8 @@ function bfs(edges, n, src, dest) {
         x = predecessor[x].parent;
     }
     path.reverse();
-    const set = new Set();
-    path.forEach((p) => {
-        set.add(p);
-    })
-    return { set: set, cost: distance[dest] };
+
+    return { path: path, cost: distance[dest] };
 }
 export function connectedComponents(edges, nodes, isdirected = false) {
 

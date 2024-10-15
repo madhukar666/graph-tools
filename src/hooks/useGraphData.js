@@ -41,7 +41,12 @@ export const useGraphData = () => {
                     color: "black"
                 };
             });
-
+            //Ascending order of edges
+            parsedEdges.sort((e1, e2) => {
+                if (e1.from === e2.from)
+                    return e1.to - e2.to;
+                return e1.from - e2.from;
+            })
             setNodes(parsedNodes);
             setEdges(parsedEdges);
         } catch (err) {

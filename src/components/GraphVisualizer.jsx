@@ -6,13 +6,14 @@ import { useGraphData } from '../hooks/useGraphData';
 import { useGraphVisualization } from '../hooks/useGraphVisualization';
 import { IOSSwitch } from '../components/IOSSwitch';
 import { Guidelines } from "./Guidelines";
-
+import { VideoComponent } from "./VideoComponent"
 
 const GraphVisualizer = () => {
     const [directed, setDirected] = useState(false);
     const [algoError, setAlgoError] = useState("");
     const [showInput, setShowInput] = useState(false);
     const containerRef = useRef(null);
+    const [cost, setCost] = useState(null)
     const networkRef = useRef(null);
     const [src, setSource] = useState(null);
     const [dest, setDest] = useState(null);
@@ -47,6 +48,7 @@ const GraphVisualizer = () => {
                     throw new Error(`Invalid result from ${algorithmName}`);
             }
             setAlgoError("")
+            setCost(null);
             if (prevEdges !== null)
                 setEdges(prevEdges)
             updateNetwork(result, edges, directed);
@@ -68,37 +70,61 @@ const GraphVisualizer = () => {
         setShowInput(false);
 
         try {
+            // Call the shortestPath algorithm
             const result = shortestPath(edges, nodes.length, src, dest, directed);
-            if (result.set.size === 0 || result.set.size === 1) {
-                if (prevEdges !== null) {
+
+            // Ensure path validity and revert edges if necessary
+            if (!result.path || result.path.length === 0 || result.path.length === 1) {
+                if (prevEdges) {
+                    // Revert to previous edge state if an error occurred
                     setEdges(prevEdges);
                     setPrevEdges(null);
                 }
-                throw new Error(`Invalid input}`);
+                setCost(null);
+                throw new Error('Invalid input'); // Corrected template literal
             }
+            // Reset previous error message
             setAlgoError("");
-            setPrevEdges(edges);
-            edges.forEach((edge) => {
-                if (result.set.has(edge.from) && result.set.has(edge.to)) {
-                    edge.dashes = true;
-                    edge.color = "red"
-                }
-                else {
-                    edge.dashes = false;
-                    edge.color = "black"
+            setCost(null);
+            // Save current edges before modifications
+            setPrevEdges([...edges]); // Copy edges to avoid mutation issues
+
+            const pathLength = result.path.length;
+            let pathIndex = 0;
+            const updatedEdges = edges.map((edge) => {
+                if (pathIndex < pathLength - 1 &&
+                    result.path[pathIndex] === edge.from && result.path[pathIndex + 1] === edge.to) {
+                    console.log(result.path[pathIndex])
+                    // Highlight the edge if part of the shortest path
+                    pathIndex++;
+                    return {
+                        ...edge, // Preserve other edge properties
+                        dashes: true,
+                        color: "red"
+                    };
+                } else {
+                    // Revert non-path edges to default
+                    return {
+                        ...edge,
+                        dashes: false,
+                        color: "black"
+                    };
                 }
             });
-            // console.log(edges);
-            updateNetwork(nodes, edges, directed);
+            setCost(result.cost)
+            updateNetwork(nodes, updatedEdges, directed);
+
+            console.log(result.path); // Log the result path for debugging
+            console.log(updatedEdges); // Log updated edges
         } catch (error) {
-            console.error(`Error : `, error);
+            console.error(`Error: `, error);
             setAlgoError(`Shortest path doesn't exist`);
-            console.log(algoError)
             setTimeout(() => {
                 setAlgoError("");
-            }, 2000)
+            }, 2000);
         }
-    }
+    };
+
     const handleConnectedComponents = () => runAlgorithm(connectedComponents, "Connected Components");
     const handleStronglyConnectedComponents = () => runAlgorithm(stronglyConnectedComponents, "Strongly Connected Components");
     const handleDijkstra = () => { setShowInput(true) };
@@ -111,11 +137,10 @@ const GraphVisualizer = () => {
     ];
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", p: 2 }}>
-            <Box className="text-center" sx={{ display: "flex", flex: 1, gap: 2 }}>
-                <Typography variant="h4" gutterBottom className="text-light-emphasis">Graph Visualizer</Typography>
-            </Box>
+        <Box sx={{ display: "flex", flexDirection: "column", maxBlockSize: "100", paddingLeft: 10, paddingRight: 10, paddingBottom: 20 }}>
+
             <Box sx={{ display: "flex", flex: 1, gap: 2 }}>
+                <VideoComponent />
                 <Box sx={{ width: '30%', display: 'flex', flexDirection: 'column', gap: 2 }} className="border rounded border-1 shadow p-5">
                     <FormControlLabel className="text-center"
                         control={<IOSSwitch checked={directed} onChange={handleDirectedChange} />}
@@ -130,16 +155,27 @@ const GraphVisualizer = () => {
                         value={graphData}
                         onChange={(e) => setGraphData(e.target.value)}
                     />
-                    {showInput && (
-                        <div className="flex flex-row items-center space-x-4">
-                            <TextField id="standard-basic" label="Enter source and destination nodes" variant="standard" onChange={(e) => { handleInput(e) }} />
-                            <Button onClick={handleSubmit} variant="contained" style={{ backgroundColor: "green" }} className="p-2 m-5 bg-primary">
-                                Run
-                            </Button>
-                            <p>Shortest path edges will be dashed and red colored</p>
-                        </div>
-                    )}
-
+                    <div className="flex flex-row items-start">
+                        {showInput && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <TextField
+                                    id="standard-basic"
+                                    label="Enter source and destination nodes"
+                                    variant="standard"
+                                    onChange={handleInput}
+                                />
+                                <Button
+                                    onClick={handleSubmit}
+                                    variant="contained"
+                                    style={{ backgroundColor: "green" }}
+                                    className="p-2"
+                                >
+                                    Run
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+                    {showInput && <p className="fs-6">Shortest path edges will be dashed and red colored</p>}
                     <FormControl fullWidth>
                         <ButtonGroup
                             orientation="vertical"
@@ -150,19 +186,27 @@ const GraphVisualizer = () => {
                             {buttons}
                         </ButtonGroup>
                     </FormControl>
-                    {algoError && <Alert severity="error" className="float-end">{algoError}</Alert>}
-                    {dataError && <Alert severity="error">{dataError}</Alert>}
+
                     <Guidelines />
                 </Box>
 
-                <Box
-                    sx={{ flex: 1, borderRadius: 2, backgroundColor: "whitesmoke" }}
-                    className={"border border-1 shadow"}
-                    ref={containerRef}
-                />
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}>
+                    {/* Existing Box with the graph visualization */}
+                    <Box
+                        sx={{ flex: 1, borderRadius: 2, backgroundColor: "whitesmoke" }}
+                        className={"border border-1 shadow"}
+                        ref={containerRef}
+                    />
+
+                    {/* New div placed directly under the graph visualization */}
+                    <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>  {/* You can adjust 'mt' (margin-top) as needed */}
+                        {algoError && <Alert severity="error" className="float-end">{algoError}</Alert>}
+                        {dataError && <Alert severity="error">{dataError}</Alert>}
+                        {cost && <Alert severity="info">{`Shortest path cost is : ${cost}`}</Alert>}
+                    </Box>
+                </Box>
             </Box>
         </Box>
     );
 }
-
 export default GraphVisualizer;
