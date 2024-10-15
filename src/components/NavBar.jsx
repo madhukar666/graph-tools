@@ -10,7 +10,6 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
-import { Margin } from '@mui/icons-material';
 const pages = ['Products', 'Pricing', 'Blog'];
 
 function ResponsiveAppBar() {
