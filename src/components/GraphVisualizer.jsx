@@ -5,11 +5,12 @@ import { stronglyConnectedComponents, connectedComponents, dijkstra } from '../A
 import { useGraphData } from '../hooks/useGraphData';
 import { useGraphVisualization } from '../hooks/useGraphVisualization';
 import { IOSSwitch } from '../components/IOSSwitch';
+import { Guidelines } from "./Guidelines";
 
 const GraphVisualizer = () => {
     const [directed, setDirected] = useState(false);
     const [error, setError] = useState("");
-    // console.log(directed);
+
     const containerRef = useRef(null);
     const networkRef = useRef(null);
 
@@ -39,7 +40,9 @@ const GraphVisualizer = () => {
             if (!Array.isArray(result) || result.length === 0) {
                 throw new Error(`Invalid result from ${algorithmName}`);
             }
+            setError("")
             if (algorithmName === "Dijkstra Algorithm") {
+
                 updateNetwork(result.nodes, result.edges, directed);
             } else {
                 updateNetwork(result, edges, directed);
@@ -47,6 +50,9 @@ const GraphVisualizer = () => {
         } catch (error) {
             console.error(`Error in ${algorithmName}:`, error);
             setError(`Error running ${algorithmName}: ${error.message}`);
+            setTimeout(() => {
+                setError("");
+            }, 2000)
         }
     };
 
@@ -61,11 +67,13 @@ const GraphVisualizer = () => {
     ];
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", height: '100vh', width: '100vw', p: 2 }}>
-            <Typography variant="h4" gutterBottom>Graph Visualizer</Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", p: 2 }}>
+            <Box className="text-center">
+                <Typography variant="h4" gutterBottom className="text-light-emphasis">Graph Visualizer</Typography>
+            </Box>
             <Box sx={{ display: "flex", flex: 1, gap: 2 }}>
-                <Box sx={{ width: '30%', display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <FormControlLabel
+                <Box sx={{ width: '30%', display: 'flex', flexDirection: 'column', gap: 2 }} className="border rounded border-1 shadow p-5">
+                    <FormControlLabel className="text-center"
                         control={<IOSSwitch checked={directed} onChange={handleDirectedChange} />}
                         label={directed ? "Directed Graph" : "Undirected Graph"}
                     />
@@ -88,11 +96,12 @@ const GraphVisualizer = () => {
                             {buttons}
                         </ButtonGroup>
                     </FormControl>
-                    {error && <Alert severity="error">{error}</Alert>}
+                    {error && <Alert severity="error" className="float-end">{error}</Alert>}
+                    <Guidelines />
                 </Box>
                 <Box
                     sx={{ flex: 1, borderRadius: 2, backgroundColor: "whitesmoke" }}
-                    className={"border border-2 border-dark bg-dark"}
+                    className={"border border-1 shadow"}
                     ref={containerRef}
                 />
             </Box>

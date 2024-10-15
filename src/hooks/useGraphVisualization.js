@@ -18,6 +18,7 @@ export const useGraphVisualization = (containerRef, networkRef) => {
             nodes: {
                 shape: "circle",
                 size: 50,
+                color: { background: "white", border: "black" },
                 font: { size: 30, color: "black" },
                 borderWidth: 2,
             },
@@ -60,9 +61,7 @@ export const useGraphVisualization = (containerRef, networkRef) => {
                 edges: { arrows: { to: { enabled: directed } } }
             });
         }
+
     }, [networkRef]);
-
-
-
     return { createNetwork, updateNetwork };
 };

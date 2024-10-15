@@ -22,11 +22,11 @@ export const useGraphData = () => {
             }));
 
             const parsedEdges = lines.slice(1).map(line => {
-                const [from, to] = line.trim().split(/\s+/).map(Number);
+                const [from, to, label] = line.trim().split(/\s+/).map(Number);
                 if (isNaN(from) || isNaN(to) || from > numberOfNodes || to > numberOfNodes) {
                     throw new Error(`Invalid edge: ${line}`);
                 }
-                return { from, to };
+                return { from, to, label: label === undefined ? "" : label.toString() };
             });
 
             setNodes(parsedNodes);
