@@ -1,16 +1,18 @@
 import { useCallback } from 'react';
 import { Network } from "vis-network/standalone";
 import { DataSet } from "vis-data";
+import { groupStyles } from '../constants/graphStyles';
 export const useGraphVisualization = (containerRef, networkRef) => {
     const createNetwork = useCallback((nodes, edges, directed) => {
         const edge = directed === true ? true : false;
 
-        console.log(edge)
+        // console.log(edge)
         const data = {
             nodes: new DataSet(nodes),
             edges: new DataSet(edges),
         };
         const options = {
+            groups: groupStyles,
             autoResize: true,
             height: "500px",
             width: "100%",
