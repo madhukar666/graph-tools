@@ -8,7 +8,7 @@ import { IOSSwitch } from '../components/IOSSwitch';
 import { Guidelines } from "./Guidelines";
 import { VideoComponent } from "./VideoComponent"
 
-const GraphVisualizer = () => {
+export const GraphVisualizer = () => {
     const [directed, setDirected] = useState(false);
     const [algoError, setAlgoError] = useState("");
     const [showInput, setShowInput] = useState(false);
@@ -22,7 +22,7 @@ const GraphVisualizer = () => {
     const [prevEdges, setPrevEdges] = useState(null);
     useEffect(() => {
         parseData();
-    }, [parseData]);
+    }, [graphData]);
 
     useEffect(() => {
         if (containerRef.current && nodes.length > 0) {
@@ -140,7 +140,6 @@ const GraphVisualizer = () => {
         <Box sx={{ display: "flex", flexDirection: "column", maxBlockSize: "100", paddingLeft: 10, paddingRight: 10, paddingBottom: 20 }}>
 
             <Box sx={{ display: "flex", flex: 1, gap: 2 }}>
-                <VideoComponent />
                 <Box sx={{ width: '30%', display: 'flex', flexDirection: 'column', gap: 2 }} className="border rounded border-1 shadow p-5">
                     <FormControlLabel className="text-center"
                         control={<IOSSwitch checked={directed} onChange={handleDirectedChange} />}
@@ -153,7 +152,9 @@ const GraphVisualizer = () => {
                         fullWidth
                         variant="outlined"
                         value={graphData}
-                        onChange={(e) => setGraphData(e.target.value)}
+                        onChange={(e) => {
+                            setGraphData(e.target.value)
+                        }}
                     />
                     <div className="flex flex-row items-start">
                         {showInput && (

@@ -1,5 +1,5 @@
 import React from "react"
-import GraphVisualizer from "./components/GraphVisualizer"
+import { GraphVisualizer } from "./components/GraphVisualizer"
 import "bootstrap/dist/css/bootstrap.min.css";
 import ResponsiveAppBar from "./components/NavBar"
 export default function App() {
@@ -8,7 +8,7 @@ export default function App() {
     <div>
       <ResponsiveAppBar />
       <div className="flex  flex-column items-align-items-center justify-content-center">
-        <GraphVisualizer class />
+        <GraphVisualizer />
       </div>
     </div>
   )

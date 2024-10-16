@@ -10,7 +10,7 @@ export const VideoComponent = () => {
                 autoPlay // Autoplay the video
 
             >
-                <source src="/images/GraphAnimation.webm" type="video/webm" />
+                <source src="/images/LogoAnimation.webm" type="video/webm" />
                 Your browser does not support the video tag.
             </video>
         </div>
