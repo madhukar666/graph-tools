@@ -6,7 +6,7 @@ import { useGraphData } from '../hooks/useGraphData';
 import { useGraphVisualization } from '../hooks/useGraphVisualization';
 import { IOSSwitch } from '../components/IOSSwitch';
 import { Guidelines } from "./Guidelines";
-import { VideoComponent } from "./VideoComponent"
+
 
 export const GraphVisualizer = () => {
     const [directed, setDirected] = useState(false);
@@ -19,7 +19,7 @@ export const GraphVisualizer = () => {
     const [dest, setDest] = useState(null);
     const { graphData, setGraphData, nodes, edges, parseData, dataError, setEdges } = useGraphData();
     const { createNetwork, updateNetwork } = useGraphVisualization(containerRef, networkRef);
-    const [prevEdges, setPrevEdges] = useState(null);
+
     useEffect(() => {
         parseData();
     }, [graphData]);
@@ -36,6 +36,7 @@ export const GraphVisualizer = () => {
         createNetwork(nodes, edges, value);
     };
 
+    //For Connected components,strongly connected components and bipartite graph
     const runAlgorithm = (algorithm, algorithmName) => {
         try {
             // console.log(edges);
@@ -49,8 +50,7 @@ export const GraphVisualizer = () => {
             }
             setAlgoError("")
             setCost(null);
-            if (prevEdges !== null)
-                setEdges(prevEdges)
+
             updateNetwork(result, edges, directed);
         } catch (error) {
             // console.error(`Error in ${algorithmName}:`, error);
@@ -68,35 +68,40 @@ export const GraphVisualizer = () => {
     }
     const handleSubmit = () => {
         setShowInput(false);
-
+        console.log("Running");
         try {
             // Call the shortestPath algorithm
             const result = shortestPath(edges, nodes.length, src, dest, directed);
-
+            console.log(result);
             // Ensure path validity and revert edges if necessary
-            if (!result.path || result.path.length === 0 || result.path.length === 1) {
-                if (prevEdges) {
-                    // Revert to previous edge state if an error occurred
-                    setEdges(prevEdges);
-                    setPrevEdges(null);
-                }
+            if (!result.path || result.path.length === 0 || result.path.length === 1 || result.cost === Infinity) {
+
+                const updatedEdges = edges.map((edge) => {
+
+                    return {
+                        ...edge,
+                        dashes: false,
+                        color: "black"
+                    }
+                })
                 setCost(null);
+                updateNetwork(nodes, updatedEdges, directed);
                 throw new Error('Invalid input'); // Corrected template literal
             }
             // Reset previous error message
             setAlgoError("");
             setCost(null);
-            // Save current edges before modifications
-            setPrevEdges([...edges]); // Copy edges to avoid mutation issues
-
-            const pathLength = result.path.length;
-            let pathIndex = 0;
+            // console.log(edges);
             const updatedEdges = edges.map((edge) => {
-                if (pathIndex < pathLength - 1 &&
-                    result.path[pathIndex] === edge.from && result.path[pathIndex + 1] === edge.to) {
-                    console.log(result.path[pathIndex])
+                console.log(edge.from + "-" + edge.to);
+                if (result.path.has(edge.from + "-" + edge.to)) {
                     // Highlight the edge if part of the shortest path
-                    pathIndex++;
+                    return {
+                        ...edge, // Preserve other edge properties
+                        dashes: true,
+                        color: "red"
+                    };
+                } else if (!directed && result.path.has(edge.to + "-" + edge.from)) {
                     return {
                         ...edge, // Preserve other edge properties
                         dashes: true,
@@ -113,7 +118,6 @@ export const GraphVisualizer = () => {
             });
             setCost(result.cost)
             updateNetwork(nodes, updatedEdges, directed);
-
             console.log(result.path); // Log the result path for debugging
             console.log(updatedEdges); // Log updated edges
         } catch (error) {
@@ -129,6 +133,7 @@ export const GraphVisualizer = () => {
     const handleStronglyConnectedComponents = () => runAlgorithm(stronglyConnectedComponents, "Strongly Connected Components");
     const handleDijkstra = () => { setShowInput(true) };
     const handleBipartite = () => { runAlgorithm(bipartite, "Bipartite Graph") }
+
     const buttons = [
         <Button key="cc" onClick={handleConnectedComponents}>Connected Components</Button>,
         <Button key="scc" onClick={handleStronglyConnectedComponents}>Kosaraju Algorithm</Button>,
@@ -194,9 +199,10 @@ export const GraphVisualizer = () => {
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}>
                     {/* Existing Box with the graph visualization */}
                     <Box
-                        sx={{ flex: 1, borderRadius: 2, backgroundColor: "whitesmoke" }}
+                        sx={{ flex: 1, borderRadius: 2, backgroundColor: "whitesmoke", height: "600px" }}
                         className={"border border-1 shadow"}
                         ref={containerRef}
+
                     />
 
                     {/* New div placed directly under the graph visualization */}

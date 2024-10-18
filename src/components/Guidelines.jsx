@@ -7,8 +7,8 @@ import { ExpandMore, ToggleOn, Input, Code, Info } from '@mui/icons-material';
 
 export const Guidelines = () => {
     return (
-        <div className="p-4 overflow-y-scroll h-30">
-            <Accordion className="bg-emerald-600">
+        <div className="p-2 overflow-y-scroll h-30 w-100">
+            <Accordion className="bg-emerald-600 w-100">
                 <AccordionSummary
                     expandIcon={<ExpandMore className="text-black" />}
                     aria-controls="panel1-content"
@@ -41,31 +41,29 @@ export const Guidelines = () => {
                             <ListItemText
                                 primary="Input Format"
                                 secondary={
-                                    <Card variant="outlined" className="mt-2">
-                                        <CardContent>
-                                            <Typography variant="body2" component="p">
-                                                Mention the number of nodes in the first line and edges in the next lines.
-                                            </Typography>
-                                            <Typography variant="subtitle1" className="font-bold mt-2">
-                                                Unweighted graph format: <strong>from to</strong>
-                                            </Typography>
-                                            <Typography variant="body2" className="p-2">
-                                                Example:
-                                                <br />1 2
-                                                <br />2 3
-                                                <br />4 3
-                                            </Typography>
-                                            <Typography variant="subtitle1" className="font-bold mt-2">
-                                                Weighted graph format: <strong>from to weight</strong>
-                                            </Typography>
-                                            <Typography variant="body2" className="p-2">
-                                                Example:
-                                                <br />1 2 4
-                                                <br />2 3 3
-                                                <br />4 3 1
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
+                                    <div>
+                                        <Typography variant="body2" component="p">
+                                            Mention the number of nodes in the first line and edges in the next lines.
+                                        </Typography>
+                                        <Typography variant="subtitle1" className="font-bold mt-2">
+                                            Unweighted graph format: <strong>from to</strong>
+                                        </Typography>
+                                        <Typography variant="body2" className="p-2">
+                                            Example:
+                                            <br />1 2
+                                            <br />2 3
+                                            <br />4 3
+                                        </Typography>
+                                        <Typography variant="subtitle1" className="font-bold mt-2">
+                                            Weighted graph format: <strong>from to weight</strong>
+                                        </Typography>
+                                        <Typography variant="body2" className="p-2">
+                                            Example:
+                                            <br />1 2 4
+                                            <br />2 3 3
+                                            <br />4 3 1
+                                        </Typography>
+                                    </div>
                                 }
                             />
                         </ListItem>

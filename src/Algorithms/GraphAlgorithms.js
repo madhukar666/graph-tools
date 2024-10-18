@@ -33,7 +33,13 @@ function dijkstra(edges, n, src, dest) {
         x = predecessor[x].parent;
     }
     path.reverse();
-    return { path: path, cost: distance[dest] };
+    const s = new Set();
+
+    for (let i = 0; i + 1 < path.length; i++) {
+        const str = path[i] + "-" + path[i + 1];
+        s.add(str);
+    }
+    return { path: s, cost: distance[dest] };
 }
 
 
@@ -46,7 +52,7 @@ function bfs(edges, n, src, dest) {
         adj[edge.from].push({ node: edge.to, cost: edge.label === "" ? 1 : parseInt(edge.label, 10) });
         adj[edge.to].push({ node: edge.from, cost: edge.label === "" ? 1 : parseInt(edge.label, 10) });
     })
-
+    console.log(adj);
     const queue = [];
     const distance = new Array(n + 1).fill(Infinity);
     distance[src] = 0;
@@ -57,7 +63,8 @@ function bfs(edges, n, src, dest) {
         const u = queue.shift();
         adj[u.node].forEach((v) => {
             if (distance[v.node] === Infinity) {
-                distance[v.node] = distance[u.node] + u.cost;
+                distance[v.node] = u.cost + v.cost;
+                console.log("Dist :" + distance[v.node]);
                 predecessor[v.node] = { parent: u.node, cost: u.cost };
                 queue.push({ node: v.node, cost: distance[v.node] });
             }
@@ -71,8 +78,14 @@ function bfs(edges, n, src, dest) {
         x = predecessor[x].parent;
     }
     path.reverse();
+    const s = new Set();
 
-    return { path: path, cost: distance[dest] };
+    for (let i = 0; i + 1 < path.length; i++) {
+        const str = path[i] + "-" + path[i + 1];
+        s.add(str);
+    }
+    console.log(distance);
+    return { path: s, cost: distance[dest] };
 }
 export function connectedComponents(edges, nodes, isdirected = false) {
 
