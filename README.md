@@ -1,70 +1,71 @@
-# Getting Started with Create React App
+# Graph Visualization and Algorithm Tool
+<video width="640" height="360" autoplay>
+  <source src= "https://drive.google.com/file/d/16egTKQpJcJgaaqUNU6tB2yaIUvTY2sLk/view?usp=drive_link" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+## Overview
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This web application allows users to input graph data (nodes and edges), visualize the resulting graph, and see the results of various graph algorithms applied to their input.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Graph Input**: Users can enter node and edge data to define their graph.
+- **Graph Visualization**: The entered graph is rendered visually using a force-directed layout.
+- **Algorithm Visualization**: Users can select from a variety of graph algorithms to visualize their results on the graph.
+  
+## Supported Algorithms
 
-### `npm start`
+- Single Source Shortest Path Algorithm
+- Connected Components
+- Strongly Connected Components(Kosaraju's algorithm)
+- Bipartite graph
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Getting Started
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Visit the website at [https://visualgraph.netlify.app](https://visualgraph.netlify.app)
+2. Use the input form to enter your graph data (see Input Format below)
+4. Select an algorithm from the menu
 
-### `npm test`
+## Input Format
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Unweighted Graphs
 
-### `npm run build`
+For unweighted graphs, each edge is represented by two numbers: the "from" node and the "to" node.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Format:
+```
+from to
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Example:
+```
+1 2
+2 4
+3 1
+4 3
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Weighted Graphs
 
-### `npm run eject`
+For weighted graphs, each edge is represented by three numbers: the "from" node, the "to" node, and the weight of the edge.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Format:
+```
+from to weight
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Example:
+```
+1 2 4
+2 4 2
+3 1 5
+4 3 3
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+=
+## Technical Stack
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Frontend: React.js with vis.js for visualizations
+- Graph Algorithms: Implementation in JavaScript
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Happy graphing!
