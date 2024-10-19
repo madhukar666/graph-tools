@@ -2,6 +2,7 @@ import React from "react"
 import { GraphVisualizer } from "./components/GraphVisualizer"
 import "bootstrap/dist/css/bootstrap.min.css";
 import ResponsiveAppBar from "./components/NavBar"
+
 export default function App() {
 
   return (

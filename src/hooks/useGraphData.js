@@ -11,13 +11,6 @@ export const useGraphData = () => {
             const trimmedData = graphData.trim();
 
             // If graphData is empty or consists of only whitespace, reset the graph
-            if (!trimmedData) {
-                setNodes([]);
-                setEdges([]);
-                setDataError("");
-                return;
-            }
-
             const lines = trimmedData.split("\n");
             const numberOfNodes = parseInt(lines[0], 10);
 
@@ -63,7 +56,7 @@ export const useGraphData = () => {
                     if (e1.from === e2.from) return e1.to - e2.to;
                     return e1.from - e2.from;
                 });
-
+                // console.log(nodes, edges);
                 setNodes(parsedNodes);
                 setEdges(parsedEdges);
             }

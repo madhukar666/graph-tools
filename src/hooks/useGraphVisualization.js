@@ -41,7 +41,7 @@ export const useGraphVisualization = (containerRef, networkRef) => {
         if (networkRef.current != null) {
             networkRef.current = null;
             // networkRef.current.destroy();
-
+            // console.log(data);
             networkRef.current = new Network(containerRef.current, data, options);
             networkRef.current.setSize("100%", "500px");
         }
