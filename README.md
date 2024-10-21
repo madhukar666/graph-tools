@@ -62,7 +62,6 @@ Example:
 4 3 3
 ```
 
-=
 ## Technical Stack
 
 - Frontend: React.js with vis.js for visualizations
